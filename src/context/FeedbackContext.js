@@ -1,30 +1,31 @@
 import { v4 as uuidv4 } from 'uuid'
 import { createContext, useState } from 'react'
+import { useEffect } from 'react'
 
 const FeedbackContext = createContext()
 
 export const FeedbackProvider = ({ children }) => {
-  const [feedback, setFeedback] = useState([
-    {
-      id: 1,
-      text: 'This is feedback item 1',
-      rating: 10,
-    },
-    {
-      id: 2,
-      text: 'This is feedback item 2',
-      rating: 9,
-    },
-    {
-      id: 3,
-      text: 'This is feedback item 3',
-      rating: 7,
-    },
-  ])
+  const [isLoading, setIsLoading] = useState([true])
+  const [feedback, setFeedback] = useState([])
   const [feedbackEdit, setFeedbackEdit] = useState({
     item: {},
     edit: false,
   })
+
+  //Grabs this onto state. When the app loads, call the HTTP server
+  useEffect(()=> {
+    fetchFeedBack()
+  },[])
+
+  const fetchFeedBack = async () => {
+    //Tell the query to sort. Important to tell the server to sort and return 
+    //Instead of having the front-end sort it.
+    const response = await fetch('http://localhost:5000/feedback')
+    const data = await response.json()
+    //Can add filter if you want
+    setFeedback(data)
+    setIsLoading(false)
+  }
 
   // Add feedback
   const addFeedback = (newFeedback) => {
@@ -63,6 +64,7 @@ export const FeedbackProvider = ({ children }) => {
         addFeedback,
         editFeedback,
         updateFeedback,
+        isLoading
       }}
     >
       {children}

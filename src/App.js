@@ -7,6 +7,8 @@ import AboutIconLink from './components/AboutIconLink'
 import AboutPage from './pages/AboutPage'
 import { FeedbackProvider } from './context/FeedbackContext'
 
+
+//Representational State 
 function App() {
   return (
     <FeedbackProvider>
